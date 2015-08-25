@@ -7,7 +7,7 @@
 +(BOOL)activateAppOfInfo:(NSDictionary *)pDict
 {
 	if (pDict != nil) {
-		OSStatus result = activateForProcessInfo((CFDictionaryRef)pDict);
+		OSStatus result = activateForProcessInfo((__bridge CFDictionaryRef)pDict);
 		return result==noErr;
 	}
 	else {
@@ -17,33 +17,33 @@
 
 +(NSDictionary *)processInfoOfIdentifier:(NSString*)targetIdentifier
 {
-	NSDictionary *pDict = (NSDictionary *)getProcessInfo(NULL,NULL,
-														 (CFStringRef)targetIdentifier);
-	return [pDict autorelease];
+	NSDictionary *pDict = (NSDictionary *)CFBridgingRelease(getProcessInfo(NULL,NULL,
+														 (__bridge CFStringRef)targetIdentifier));
+	return pDict;
 }
 
 
 +(NSDictionary *)processInfoOfName:(NSString*)targetName
 {
-	NSDictionary *pDict = (NSDictionary *)getProcessInfo(NULL,
-														 (CFStringRef)targetName,
-														 NULL);
-	return [pDict autorelease];
+	NSDictionary *pDict = (NSDictionary *)CFBridgingRelease(getProcessInfo(NULL,
+														 (__bridge CFStringRef)targetName,
+														 NULL));
+	return pDict;
 }
 
 +(NSDictionary *)processInfoOfType:(NSString *)targetCreator 
 {
-	NSDictionary *pDict = (NSDictionary *)getProcessInfo((CFStringRef)targetCreator,
-														 NULL,NULL);
-	return [pDict autorelease];
+	NSDictionary *pDict = (NSDictionary *)CFBridgingRelease(getProcessInfo((__bridge CFStringRef)targetCreator,
+														 NULL,NULL));
+	return pDict;
 }
 
 +(NSDictionary *)processInfoOfType:(NSString *)targetCreator processName:(NSString*)targetName identifier:(NSString*)targetIdentifier
 {
-	NSDictionary *pDict = (NSDictionary *)getProcessInfo((CFStringRef)targetCreator,
-										   (CFStringRef)targetName,
-										   (CFStringRef)targetIdentifier);
-	return [pDict autorelease];
+	NSDictionary *pDict = (NSDictionary *)CFBridgingRelease(getProcessInfo((__bridge CFStringRef)targetCreator,
+										   (__bridge CFStringRef)targetName,
+										   (__bridge CFStringRef)targetIdentifier));
+	return pDict;
 }
 
 +(BOOL)activateAppOfIdentifier:(NSString *)targetIdentifier
@@ -63,9 +63,9 @@
 
 +(BOOL)activateAppOfType:(NSString *)targetCreator processName:(NSString*)targetName identifier:(NSString*)targetIdentifier
 {
-	CFDictionaryRef pDict = getProcessInfo((CFStringRef)targetCreator,
-															(CFStringRef)targetName,
-															(CFStringRef)targetIdentifier);
+	CFDictionaryRef pDict = getProcessInfo((__bridge CFStringRef)targetCreator,
+															(__bridge CFStringRef)targetName,
+															(__bridge CFStringRef)targetIdentifier);
 	if (pDict != nil) {
 		OSStatus result = activateForProcessInfo(pDict);
 		CFRelease(pDict);
